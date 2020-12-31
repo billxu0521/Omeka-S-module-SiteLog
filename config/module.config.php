@@ -17,6 +17,14 @@ return  [
             'SiteLog\Controller\Site\SiteLog' => Controller\Site\SiteLogController::class,
         ],
     ],
+    'sitelog' => [
+        'settings' => [
+            'sitelog_inline_public' => '',
+        ],
+        'trackers' => [
+            'default' => Tracker\InlineScript::class,
+        ],
+    ],
     'router' => [
         'routes' => [
             'site' => [

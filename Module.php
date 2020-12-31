@@ -9,8 +9,12 @@ if (!class_exists(\Generic\AbstractModule::class)) {
 
 use Generic\AbstractModule;
 use Zend\EventManager\Event;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\EventManager\SharedEventManagerInterface;
 use Zend\Mvc\MvcEvent;
+use Zend\View\Model\JsonModel;
+use Zend\View\View;
+use Zend\View\ViewEvent;
 
 /**
  * Search History.
@@ -43,11 +47,20 @@ class Module extends AbstractModule
    
     public function attachListeners(SharedEventManagerInterface $sharedEventManager)
     {
+        
         $sharedEventManager->attach(
             '*',
             'view.layout',
             [$this, 'handleViewLayout']
         );
+        
+        $sharedEventManager->attach(
+            View::class,
+            ViewEvent::EVENT_RESPONSE,
+            [$this, 'appendSiteLog']
+        );
+         
+         
        
     }
 
@@ -64,14 +77,93 @@ class Module extends AbstractModule
         $assetUrl = $view->plugin('assetUrl');
         $url = $site()->url();
         $siteurl = 'var siteurl = ' .json_encode($url). ';';
-
         $view->headScript()
            ->appendScript($siteurl)
-           ->appendFile($assetUrl('js/sitelog_lib.js', 'SiteLog'), 'text/javascript', ['defer' => 'defer','siteurl' => $siteurl])
-           ->appendFile($assetUrl('js/sitelog_script.js', 'SiteLog'), 'text/javascript', ['defer' => 'defer']);
-           
+           ->appendFile($assetUrl('js/sitelog_lib.js', 'SiteLog'), 'text/javascript', ['defer' => 'defer']);
+           //->appendFile($assetUrl('js/sitelog_script.js', 'SiteLog'), 'text/javascript', ['defer' => 'defer']);
+        
+
     }
 
+    public function appendSiteLog(ViewEvent $viewEvent): void
+    {
+        // In case of error or a internal redirection, there may be two calls.
+        static $processed;
+        if ($processed) {
+            return;
+        }
+        $processed = true;
+
+        $model = $viewEvent->getParam('model');
+        if (is_object($model) && $model instanceof JsonModel) {
+            $this->trackCall('json', $viewEvent);
+            return;
+        }
+
+        $content = $viewEvent->getResponse()->getContent();
+
+        // Quick hack to avoid a lot of checks for an event that always occurs.
+        // Headers are not yet available, so the content type cannot be checked.
+        // Note: The layout of the theme should start with this doctype, without
+        // space or line break. This is not the case in the admin layout of
+        // Omeka S 1.0.0, so a check is done.
+        // The ltrim is required in case of a bad theme layout, and the substr
+        // allows a quicker check because it avoids a trim on all the content.
+        // if (substr($content, 0, 15) != '<!DOCTYPE html>') {
+        $startContent = ltrim(substr((string) $content, 0, 30));
+        if (strpos($startContent, '<!DOCTYPE html>') === 0) {
+            $this->trackCall('html', $viewEvent);
+        } elseif (strpos($startContent, '<?xml ') !== 0) {
+            $this->trackCall('xml', $viewEvent);
+        } elseif (json_decode($content) !== null) {
+            $this->trackCall('json', $viewEvent);
+        } else {
+            $this->trackCall('undefined', $viewEvent);
+        }
+    }
+    
+    /**
+     * Track an html, an api, a json, an xml or an undefined response.
+     *
+     * @param string $type "html", "json", "xml", "undefined", or "error".
+     * @param Event $event
+     */
+    protected function trackCall($type, Event $event): void
+    {
+        /*
+        $services = $this->getServiceLocator();
+        $serverUrl = $services->get('ViewHelperManager')->get('ServerUrl');
+        $url = $serverUrl(true);
+
+        
+        $assetUrl = $services->get('ViewHelperManager')->get('assetUrl');        
+        $inlineScript = '<script type="text/javascript" src="'.$assetUrl('js/sitelog_script.js', 'SiteLog').'"></script>';
+        $response = $event->getResponse();
+        $content = $response->getContent();
+        $endTagBody = strripos((string) $content, '</body>', -7);
+        if (empty($endTagBody)) {
+            $this->trackError($url, $type, $event);
+            return;
+        }
+
+        $content = substr_replace($content, $inlineScript, $endTagBody, 0);
+        $response->setContent($content);
+        */
+        
+        $services = $this->getServiceLocator();
+        $serverUrl = $services->get('ViewHelperManager')->get('ServerUrl');
+        $url = $serverUrl(true);
+
+        $trackers = $services->get('Config')['sitelog']['trackers'];
+        foreach ($trackers as $tracker) {
+            $tracker = new $tracker();
+            $tracker->setServiceLocator($services);
+            $tracker->track($url, $type, $event);
+        }
+        
+    }
+    
+    
     public function handleGuestWidgets(Event $event)
     {
         

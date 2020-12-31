@@ -8,8 +8,6 @@ use Zend\Http\PhpEnvironment\RemoteAddress;
 use Zend\Mvc\Controller\AbstractActionController;
 use Omeka\Api\Representation\AbstractResourceEntityRepresentation;
 use Omeka\Api\Representation\AbstractRepresentation;
-
-
 use Zend\View\Model\JsonModel;
 
 class SiteLogController extends AbstractActionController
@@ -23,9 +21,7 @@ class SiteLogController extends AbstractActionController
         $site = $this->currentSite();
         $site_id = $site ? $site->id() : null;
         $data = $this->params()->fromPost();
-
         $log = $data['log'];
-       
         $logRequest = [
             'o:user_ip' => $user_ip,
             'o:site_id' => $site_id,
