@@ -1,0 +1,7 @@
+@media screen {
+    
+}
+
+.browse td:first-child, .browse th:first-child{
+    width: 40% !important;
+}

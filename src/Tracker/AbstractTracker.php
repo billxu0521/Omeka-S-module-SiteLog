@@ -1,9 +1,9 @@
 <?php 
 namespace SiteLog\Tracker;
 
-use Zend\EventManager\Event;
-use Zend\Http\PhpEnvironment\RemoteAddress;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\EventManager\Event;
+use Laminas\Http\PhpEnvironment\RemoteAddress;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Omeka\Stdlib\Message;
 
 abstract class AbstractTracker implements TrackerInterface

@@ -8,13 +8,15 @@ if (!class_exists(\Generic\AbstractModule::class)) {
 }
 
 use Generic\AbstractModule;
-use Zend\EventManager\Event;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\EventManager\SharedEventManagerInterface;
-use Zend\Mvc\MvcEvent;
-use Zend\View\Model\JsonModel;
-use Zend\View\View;
-use Zend\View\ViewEvent;
+use Laminas\EventManager\Event;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\EventManager\SharedEventManagerInterface;
+use Laminas\Mvc\MvcEvent;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\View;
+use Laminas\View\ViewEvent;
+use Laminas\View\Renderer\PhpRenderer;
+
 
 /**
  * Search History.
@@ -58,11 +60,9 @@ class Module extends AbstractModule
             View::class,
             ViewEvent::EVENT_RESPONSE,
             [$this, 'appendSiteLog']
-        );
-         
-         
-       
+        );       
     }
+
 
     public function handleViewLayout(Event $event): void
     {
@@ -71,7 +71,6 @@ class Module extends AbstractModule
             return;
         }
         
-        //$site = $view->currentSite();
         $services = $this->getServiceLocator();
         $site = $services->get('ControllerPluginManager')->get('currentSite');
         $assetUrl = $view->plugin('assetUrl');
@@ -81,8 +80,6 @@ class Module extends AbstractModule
            ->appendScript($siteurl)
            ->appendFile($assetUrl('js/sitelog_lib.js', 'SiteLog'), 'text/javascript', ['defer' => 'defer']);
            //->appendFile($assetUrl('js/sitelog_script.js', 'SiteLog'), 'text/javascript', ['defer' => 'defer']);
-        
-
     }
 
     public function appendSiteLog(ViewEvent $viewEvent): void
@@ -130,26 +127,7 @@ class Module extends AbstractModule
      */
     protected function trackCall($type, Event $event): void
     {
-        /*
-        $services = $this->getServiceLocator();
-        $serverUrl = $services->get('ViewHelperManager')->get('ServerUrl');
-        $url = $serverUrl(true);
-
-        
-        $assetUrl = $services->get('ViewHelperManager')->get('assetUrl');        
-        $inlineScript = '<script type="text/javascript" src="'.$assetUrl('js/sitelog_script.js', 'SiteLog').'"></script>';
-        $response = $event->getResponse();
-        $content = $response->getContent();
-        $endTagBody = strripos((string) $content, '</body>', -7);
-        if (empty($endTagBody)) {
-            $this->trackError($url, $type, $event);
-            return;
-        }
-
-        $content = substr_replace($content, $inlineScript, $endTagBody, 0);
-        $response->setContent($content);
-        */
-        
+       
         $services = $this->getServiceLocator();
         $serverUrl = $services->get('ViewHelperManager')->get('ServerUrl');
         $url = $serverUrl(true);
@@ -168,4 +146,5 @@ class Module extends AbstractModule
     {
         
     }
+        
 }

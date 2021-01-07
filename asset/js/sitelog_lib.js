@@ -14,7 +14,7 @@ function sendLog(messege){
 function enterPage(){
     var url = window.location.pathname;
     var event = 'enter_page';
-    var messege_text = '{event_type:"'+ event +'",url:"'+ url +'"}';
+    var messege_text = '{"event_type":"'+ event +'","url":"'+ url +'"}';
     sendLog(messege_text);
 }
 
@@ -26,7 +26,7 @@ function clickItemEvent(){
         var url = $(this).find('a').attr('href')
         var item_id = url.split('/').pop();
         var event = 'click_item';
-        var messege_text = '{event_type:"'+ event +'",url:"'+ url +'",item_id:"'+ item_id +'"}';
+        var messege_text = '{"event_type":"'+ event +'","url":"'+ url +'",item_id:"'+ item_id +'"}';
         sendLog(messege_text);
     });   
 }
@@ -39,7 +39,7 @@ function clickMediaEvent(){
         var url = $(this).find('a').attr('href')
         var item_id = url.split('/').pop();
         var event = 'click_media';
-        var messege_text = '{event_type:"'+ event +'",url:"'+ url +'",item_id:"'+ item_id +'"}';
+        var messege_text = '{"event_type":"'+ event +'","url":"'+ url +'",item_id:"'+ item_id +'"}';
         sendLog(messege_text);
     });
 }
@@ -51,13 +51,26 @@ function clickMetadataBrowseEvent(){
     $('.metadata-browse-direct-link').click(function () {
         var event = 'click_metadata_browse';
         var metaDataText = $(this).text();
-        var messege_text = '{event_type:"'+ event +'",text:"'+metaDataText+'"}';
+        var messege_text = '{"event_type":"'+ event +'",text:"'+metaDataText+'"}';
         sendLog(messege_text);
     });   
     $('.metadata-browse-link').click(function () {
         var event = 'click_metadata_browse';
         var metaDataText = $(this).parent().text();
-        var messege_text = '{event_type:"'+ event +'",text:"'+metaDataText+'"}';
+        var messege_text = '{"event_type":"'+ event +'",text:"'+metaDataText+'"}';
+        sendLog(messege_text);
+    });   
+}
+
+/*
+ * click Link event
+ */
+function clickLinkEvent(){
+    $('a:not(.item.resource > a):not(.media.resource > a)').click(function () {
+        var url = $(this).attr('href');
+        var item_id = url.split('/').pop();
+        var event = 'click_link';
+        var messege_text = '{"event_type":"'+ event +'","url":"'+ url +'"}';
         sendLog(messege_text);
     });   
 }

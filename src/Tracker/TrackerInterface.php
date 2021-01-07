@@ -1,8 +1,8 @@
 <?php 
 namespace SiteLog\Tracker;
 
-use Zend\EventManager\Event;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\EventManager\Event;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 interface TrackerInterface
 {

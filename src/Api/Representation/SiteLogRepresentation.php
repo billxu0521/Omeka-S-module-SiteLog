@@ -19,14 +19,29 @@ class SiteLogRepresentation extends AbstractEntityRepresentation
     public function getJsonLd()
     {
         $entity = $this->resource;
+        
+        $created = [
+            '@value' => $this->getDateTime($this->created()),
+            '@type' => 'http://www.w3.org/2001/XMLSchema#dateTime',
+        ];
+        
         return [
-            'o:user_ip' => '140',
-            'o:site_id' => 1,
-            'o:log' => 'test',
-            'o:created' => $this->getDateTime($entity->getCreated()),
+            'o:id' => $this->id(),
+            'o:user_ip' => $this->userip(),
+            'o:site_id' => $this->site(),
+            'o:log' => $this->log(),
+            'o:created' => $created,
         ];
     }
-
+    
+    /**
+     * @return \Omeka\Api\Representation\UserRepresentation
+     */
+    public function id()
+    {
+        return $this->resource->getId();
+    }
+    
     /**
      * @return \Omeka\Api\Representation\UserRepresentation
      */
@@ -41,9 +56,17 @@ class SiteLogRepresentation extends AbstractEntityRepresentation
      */
     public function userip()
     {
-        
+        return $this->resource->getUserip();
     }
 
+    /**
+     * @return \Omeka\Api\Representation\UserRepresentation
+     */
+    public function log()
+    {
+        return $this->resource->getLog();
+    }
+    
     /**
      * @return \Omeka\Api\Representation\SiteRepresentation|null
      */
@@ -83,7 +106,6 @@ class SiteLogRepresentation extends AbstractEntityRepresentation
         return $this->resource->getCreated();
     }
 
-  
     /**
      * Check if a module is active.
      *

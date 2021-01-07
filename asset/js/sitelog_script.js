@@ -4,5 +4,6 @@
         clickItemEvent();
         clickMediaEvent();
         clickMetadataBrowseEvent();
+        clickLinkEvent();
     });
 })();

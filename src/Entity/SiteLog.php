@@ -26,6 +26,13 @@ class SiteLog extends AbstractEntity
      */
     protected $id;
 
+    /**
+     * @var int
+     *
+     * @Column(type="integer")
+     * @GeneratedValue
+     */
+    protected $site_id;
   
     /**
      * @var string
@@ -67,6 +74,11 @@ class SiteLog extends AbstractEntity
     public function getId()
     {
         return $this->id;
+    }
+    
+    public function getSiteid()
+    {
+        return $this->site_id;
     }
     
     public function setUserip($user_ip)

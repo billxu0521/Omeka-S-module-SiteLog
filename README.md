@@ -1,14 +1,18 @@
 
-# Note! this moudle is unfinished
+# Caution! this moudle is unfinished.
 
 SiteLog (module for Omeka S)
 ===================================
 
 Log for site
-
+Record activity records of visitors in the sites, and report in admin board.It is website tracker like Google Analytics, but the content of the record is simpler, just for the convenience of statistical website usage. May involve privacy issues, please use with caution.
 
 Installation
 ------------
+Uncompress files in the module directory and rename module folder `SiteLog`.
+Then install it like any other Omeka module and follow the config instructions.
+
+See general end user documentation for [Installing a module].
 
 Usage
 -----

@@ -2,13 +2,12 @@
 
 namespace SiteLog\Controller\Site;
 
-use Zend\Http\Response;
-use Zend\Http\PhpEnvironment\RemoteAddress;
-
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Http\Response;
+use Laminas\Http\PhpEnvironment\RemoteAddress;
+use Laminas\Mvc\Controller\AbstractActionController;
 use Omeka\Api\Representation\AbstractResourceEntityRepresentation;
 use Omeka\Api\Representation\AbstractRepresentation;
-use Zend\View\Model\JsonModel;
+use Laminas\View\Model\JsonModel;
 
 class SiteLogController extends AbstractActionController
 {
@@ -39,7 +38,7 @@ class SiteLogController extends AbstractActionController
         ]);
         
     }
-  
+    
     /**
      * Return a message of error.
      *

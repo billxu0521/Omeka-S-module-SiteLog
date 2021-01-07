@@ -2,6 +2,11 @@
 namespace SiteLog;
 
 return  [
+    'view_manager' => [
+        'template_path_stack' => [
+            dirname(__DIR__) . '/view',
+        ],
+    ],
     'api_adapters' => [
         'invokables' => [
             'site_log' => Api\Adapter\SiteLogAdapter::class,
@@ -15,6 +20,13 @@ return  [
     'controllers' => [
         'invokables' => [
             'SiteLog\Controller\Site\SiteLog' => Controller\Site\SiteLogController::class,
+            'SiteLog\Controller\Admin\Index' => Controller\Admin\IndexController::class,
+        ],
+    ],
+    'form_elements' => [
+        'factories' => [
+            #Form\ConfigForm::class => Service\Form\QuickSearchFormFactory::class,
+            #'SiteLog\Form\ConfigForm' => Service\Form\ConfigFormFactory::class,
         ],
     ],
     'sitelog' => [
@@ -25,12 +37,29 @@ return  [
             'default' => Tracker\InlineScript::class,
         ],
     ],
+    'navigation' => [
+        'site' => [
+            [
+                'label' => 'Site Log', // @translate
+                'route' => 'admin/site/slug/site-log/default',
+                'useRouteMatch' => true,
+                'class' => 'fa-list',
+                'action' => 'index',
+                'pages' => [
+                    [
+                        'route' => 'admin/site/slug/site-log/default',
+                        'visible' => false,
+                    ],
+                ],
+            ],
+        ],
+    ],
     'router' => [
         'routes' => [
             'site' => [
                 'child_routes' => [
                     'sitelog' => [
-                        'type' => \Zend\Router\Http\Segment::class,
+                        'type' => \Laminas\Router\Http\Segment::class,
                         'options' => [
                             'route' => '/sitelog[/:action]',
                             'constraints' => [
@@ -45,6 +74,45 @@ return  [
                     ],
                 ],
             ],
+            
+            
+            'admin' => [
+                'child_routes' => [
+                    'site' => [
+                        'child_routes' => [
+                            'slug' => [
+                                'child_routes' => [
+                                    'site-log' => [
+                                        'type' => 'Literal',
+                                        'options' => [
+                                            'route' => '/site-log',
+                                            'defaults' => [
+                                                '__NAMESPACE__' => 'SiteLog\Controller\Admin',
+                                                'controller' => 'index',
+                                                'action' => 'index',
+                                            ],
+                                        ],
+                                        'may_terminate' => true,
+                                        'child_routes' => [
+                                            'default' => [
+                                                'type' => 'Segment',
+                                                'options' => [
+                                                    'route' => '/:action',
+                                                    'constraints' => [
+                                                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            
+            
         ],
     ],
     'translator' => [
