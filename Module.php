@@ -55,19 +55,24 @@ class Module extends AbstractModule
             'view.layout',
             [$this, 'handleViewLayout']
         );
-        
+        /*
         $sharedEventManager->attach(
             View::class,
             ViewEvent::EVENT_RESPONSE,
             [$this, 'appendSiteLog']
         );       
+        */
     }
 
 
     public function handleViewLayout(Event $event): void
     {
         $view = $event->getTarget();
+        error_log('SITELOG');
+        error_log(json_encode($view->status()->isSiteRequest()));
         if (!$view->status()->isSiteRequest()) {
+            
+            
             return;
         }
         
@@ -77,9 +82,9 @@ class Module extends AbstractModule
         $url = $site()->url();
         $siteurl = 'var siteurl = ' .json_encode($url). ';';
         $view->headScript()
-           ->appendScript($siteurl)
-           ->appendFile($assetUrl('js/sitelog_lib.js', 'SiteLog'), 'text/javascript', ['defer' => 'defer']);
-           //->appendFile($assetUrl('js/sitelog_script.js', 'SiteLog'), 'text/javascript', ['defer' => 'defer']);
+            ->appendScript($siteurl)
+            ->appendFile($assetUrl('js/sitelog_lib.js', 'SiteLog'), 'text/javascript', ['defer' => 'defer']);
+            //->appendFile($assetUrl('js/sitelog_script.js', 'SiteLog'), 'text/javascript', ['defer' => 'defer']);
     }
 
     public function appendSiteLog(ViewEvent $viewEvent): void

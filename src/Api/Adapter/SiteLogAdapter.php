@@ -13,6 +13,8 @@ class SiteLogAdapter extends AbstractEntityAdapter
 {
     protected $sortFields = [
         'id' => 'id',
+        'reference' => 'reference',
+        'item_id' => 'item_id',
         'site_id' => 'site_id',
         'user_ip' => 'user_ip',
     ];
@@ -39,9 +41,14 @@ class SiteLogAdapter extends AbstractEntityAdapter
         if ($this->shouldHydrate($request, 'o:site_id')) {
             $siteId = $request->getValue('o:site_id');
             $entity->setSite($this->getAdapter('sites')->findEntity($siteId));
+        }  
+        if ($this->shouldHydrate($request, 'o:item_id')) {
+            $itemId = $request->getValue('o:item_id');
+            $entity->setItem($this->getAdapter('items')->findEntity($itemId));
         }                
         $entity->setUserip($request->getValue('o:user_ip', ''));
-        $entity->setLog($request->getValue('o:log', ''));
+        $entity->setReference($request->getValue('o:reference', ''));
+        $entity->setContext($request->getValue('o:context', ''));
     }
 
     public function buildQuery(QueryBuilder $qb, array $query)

@@ -28,8 +28,10 @@ class SiteLogRepresentation extends AbstractEntityRepresentation
         return [
             'o:id' => $this->id(),
             'o:user_ip' => $this->userip(),
+            'o:reference' => $this->reference(),
+            'o:item_id' => $this->item(),
             'o:site_id' => $this->site(),
-            'o:log' => $this->log(),
+            'o:context' => $this->context(),
             'o:created' => $created,
         ];
     }
@@ -62,9 +64,9 @@ class SiteLogRepresentation extends AbstractEntityRepresentation
     /**
      * @return \Omeka\Api\Representation\UserRepresentation
      */
-    public function log()
+    public function context()
     {
-        return $this->resource->getLog();
+        return $this->resource->getContext();
     }
     
     /**
@@ -79,23 +81,12 @@ class SiteLogRepresentation extends AbstractEntityRepresentation
     }
     
     /**
-     * @return \Omeka\Api\Representation\SiteRepresentation|null
+     * @return \Omeka\Api\Representation\ItemRepresentation|null
      */
     public function item()
     {
         $item = $this->resource->getItem();
         return $item;
-    }
-    
-    /**
-     * @return \Omeka\Api\Representation\SiteRepresentation|null
-     */
-    public function itemset()
-    {
-        $itemset = $this->resource->getItemset();
-        return $itemset
-            ? $this->getAdapter('itemset')->getRepresentation($itemset)
-            : null;
     }
   
     /**

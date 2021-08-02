@@ -13,7 +13,6 @@ class SiteLogController extends AbstractActionController
 {
     public function addAction()
     {
-        
         $request = $this->getRequest();
         $api = $this->api();
         $user_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];

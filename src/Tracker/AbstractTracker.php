@@ -39,7 +39,8 @@ abstract class AbstractTracker implements TrackerInterface
        
         $services = $this->getServiceLocator();
         $assetUrl = $services->get('ViewHelperManager')->get('assetUrl');        
-        $inlineScript = '<script type="text/javascript" src="'.$assetUrl('js/sitelog_script.js', 'SiteLog').'"></script>';
+        //$inlineScript = '<script type="text/javascript" src="'.$assetUrl('js/sitelog_script.js', 'SiteLog').'"></script>';
+        $inlineScript = '';
         $response = $event->getResponse();
         $content = $response->getContent();
         $endTagBody = strripos((string) $content, '</body>', -7);

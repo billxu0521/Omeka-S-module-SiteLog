@@ -21,6 +21,8 @@ return  [
         'invokables' => [
             'SiteLog\Controller\Site\SiteLog' => Controller\Site\SiteLogController::class,
             'SiteLog\Controller\Admin\Index' => Controller\Admin\IndexController::class,
+            'Omeka\Controller\Site\Item' => Controller\Site\ItemController::class,
+            //'Omeka\Controller\Site\ItemSet' => Controller\Site\ItemSetController::class,
         ],
     ],
     'form_elements' => [
@@ -34,7 +36,8 @@ return  [
             'sitelog_inline_public' => '',
         ],
         'trackers' => [
-            'default' => Tracker\InlineScript::class,
+            //'default' => Tracker\InlineScript::class,
+            'default' => '',
         ],
     ],
     'navigation' => [

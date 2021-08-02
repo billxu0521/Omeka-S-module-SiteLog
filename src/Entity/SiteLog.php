@@ -6,7 +6,7 @@ use DateTime;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Omeka\Entity\AbstractEntity;
 use Omeka\Entity\Site;
-
+use Omeka\Entity\Item;
 
 /**
  * @Entity
@@ -25,6 +25,14 @@ class SiteLog extends AbstractEntity
      * @GeneratedValue
      */
     protected $id;
+
+    /**
+     * @var int
+     *
+     * @Column(type="integer")
+     * @GeneratedValue
+     */
+    protected $item_id;
 
     /**
      * @var int
@@ -53,10 +61,28 @@ class SiteLog extends AbstractEntity
     protected $site;
     
     /**
+     * @var Item
+     * @ManyToOne(
+     *     targetEntity="Omeka\Entity\Item"
+     * )
+     * @JoinColumn(
+     *     nullable=true,
+     *     onDelete="SET NULL"
+     * )
+     */
+    protected $item;
+
+    /**
      * @var string
      * @Column(type="text")
      */
-    protected $log;
+    protected $reference;
+
+    /**
+     * @var string
+     * @Column(type="text")
+     */
+    protected $context;
   
     /**
      * @var DateTime
@@ -76,6 +102,11 @@ class SiteLog extends AbstractEntity
         return $this->id;
     }
     
+    public function getItemid()
+    {
+        return $this->item_id;
+    }
+
     public function getSiteid()
     {
         return $this->site_id;
@@ -90,16 +121,25 @@ class SiteLog extends AbstractEntity
     {
         return $this->user_ip;
     }
-    
 
-    public function setLog($log)
+    public function setReference($reference)
     {
-        $this->log = $log;
+        $this->reference = $reference;
     }
 
-    public function getLog()
+    public function getReference()
     {
-        return $this->log;
+        return $this->reference;
+    }
+
+    public function setContext($context)
+    {
+        $this->context = $context;
+    }
+
+    public function getContext()
+    {
+        return $this->context;
     }
 
     /**
@@ -109,6 +149,24 @@ class SiteLog extends AbstractEntity
     public function setSite(Site $site = null)
     {
         $this->site = $site;
+        return $this;
+    }
+
+    /**
+     * @return \Omeka\Entity\Item
+     */
+    public function getItem()
+    {
+        return $this->item;
+    }
+
+    /**
+     * @param Item $item
+     * @return self
+     */
+    public function setItem(Item $item = null)
+    {
+        $this->item = $item;
         return $this;
     }
 
@@ -138,7 +196,6 @@ class SiteLog extends AbstractEntity
         return $this->created;
     }
 
-   
     /**
      * @PrePersist
      */
