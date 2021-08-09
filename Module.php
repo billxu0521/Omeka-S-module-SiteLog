@@ -55,6 +55,22 @@ class Module extends AbstractModule
             'view.layout',
             [$this, 'handleViewLayout']
         );
+
+        $controllers = [
+            'Omeka\Controller\Admin\Item',
+            //'Omeka\Controller\Admin\ItemSet',
+            'Omeka\Controller\Admin\Media',
+        ];
+
+        foreach ($controllers as $controller) {
+            // Display 
+            $sharedEventManager->attach(
+                $controller,
+                'view.show.sidebar',
+                [$this, 'adminViewShowSidebar']
+            );
+        }
+
         /*
         $sharedEventManager->attach(
             View::class,
@@ -68,8 +84,6 @@ class Module extends AbstractModule
     public function handleViewLayout(Event $event): void
     {
         $view = $event->getTarget();
-        error_log('SITELOG');
-        error_log(json_encode($view->status()->isSiteRequest()));
         if (!$view->status()->isSiteRequest()) {
             
             
@@ -122,6 +136,21 @@ class Module extends AbstractModule
         } else {
             $this->trackCall('undefined', $viewEvent);
         }
+    }
+
+    public function adminViewShowSidebar(Event $event): void
+    {
+        $view = $event->getTarget();
+
+        $plugins = $view->getHelperPluginManager();
+        $sitelogcount = $plugins->get('siteLogCounter');
+        $sitelogcount = $sitelogcount();
+        $resource = $view->vars()->resource;
+        error_log(json_encode($resource->id()));
+
+        echo '<div class="meta-group">
+            <h4>SiteLogCount</h4>
+        </div>';
     }
     
     /**

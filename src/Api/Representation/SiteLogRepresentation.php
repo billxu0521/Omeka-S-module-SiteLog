@@ -31,6 +31,7 @@ class SiteLogRepresentation extends AbstractEntityRepresentation
             'o:reference' => $this->reference(),
             'o:item_id' => $this->item(),
             'o:site_id' => $this->site(),
+            'o:page_slug' => $this->page(),
             'o:context' => $this->context(),
             'o:created' => $created,
         ];
@@ -44,18 +45,6 @@ class SiteLogRepresentation extends AbstractEntityRepresentation
         return $this->resource->getId();
     }
     
-    /**
-     * @return \Omeka\Api\Representation\UserRepresentation
-     */
-    public function user()
-    {
-        $user = $this->resource->getUser();
-        return $this->getAdapter('users')->getRepresentation($user);
-    }
-    
-    /**
-     * @return \Omeka\Api\Representation\UserRepresentation
-     */
     public function userip()
     {
         return $this->resource->getUserip();
@@ -69,24 +58,19 @@ class SiteLogRepresentation extends AbstractEntityRepresentation
         return $this->resource->getContext();
     }
     
-    /**
-     * @return \Omeka\Api\Representation\SiteRepresentation|null
-     */
     public function site()
     {
-        $site = $this->resource->getSite();
-        return $site
-            ? $this->getAdapter('sites')->getRepresentation($site)
-            : null;
+        return  $this->resource->getSiteid();
     }
     
-    /**
-     * @return \Omeka\Api\Representation\ItemRepresentation|null
-     */
+    public function page()
+    {
+        return  $this->resource->getPageslug();
+    }
+    
     public function item()
     {
-        $item = $this->resource->getItem();
-        return $item;
+        return $this->resource->getItemid();
     }
   
     /**
@@ -95,6 +79,12 @@ class SiteLogRepresentation extends AbstractEntityRepresentation
     public function created()
     {
         return $this->resource->getCreated();
+    }
+
+    
+    public function reference()
+    {
+        return $this->resource->getReference();
     }
 
     /**

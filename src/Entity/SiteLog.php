@@ -47,30 +47,12 @@ class SiteLog extends AbstractEntity
      * @Column(type="string", length=45)
      */
     protected $user_ip;
-    
+
     /**
-     * @var Site
-     * @ManyToOne(
-     *     targetEntity="Omeka\Entity\Site"
-     * )
-     * @JoinColumn(
-     *     nullable=true,
-     *     onDelete="SET NULL"
-     * )
+     * @var string
+     * @Column(type="text")
      */
-    protected $site;
-    
-    /**
-     * @var Item
-     * @ManyToOne(
-     *     targetEntity="Omeka\Entity\Item"
-     * )
-     * @JoinColumn(
-     *     nullable=true,
-     *     onDelete="SET NULL"
-     * )
-     */
-    protected $item;
+    protected $page_slug;
 
     /**
      * @var string
@@ -107,9 +89,19 @@ class SiteLog extends AbstractEntity
         return $this->item_id;
     }
 
+    public function setItemid($item_id)
+    {
+        $this->item_id = $item_id;
+    }
+
     public function getSiteid()
     {
         return $this->site_id;
+    }
+
+    public function setSiteid($site_id)
+    {
+        $this->site_id = $site_id;
     }
     
     public function setUserip($user_ip)
@@ -120,6 +112,16 @@ class SiteLog extends AbstractEntity
     public function getUserip()
     {
         return $this->user_ip;
+    }
+
+    public function getPageslug()
+    {
+        return $this->page_slug;
+    }
+
+    public function setPageslug($page_slug)
+    {
+        $this->page_slug = $page_slug;
     }
 
     public function setReference($reference)
@@ -142,41 +144,6 @@ class SiteLog extends AbstractEntity
         return $this->context;
     }
 
-    /**
-     * @param Site $site
-     * @return self
-     */
-    public function setSite(Site $site = null)
-    {
-        $this->site = $site;
-        return $this;
-    }
-
-    /**
-     * @return \Omeka\Entity\Item
-     */
-    public function getItem()
-    {
-        return $this->item;
-    }
-
-    /**
-     * @param Item $item
-     * @return self
-     */
-    public function setItem(Item $item = null)
-    {
-        $this->item = $item;
-        return $this;
-    }
-
-    /**
-     * @return \Omeka\Entity\Site
-     */
-    public function getSite()
-    {
-        return $this->site;
-    }
 
     /**
      * @param DateTime $created

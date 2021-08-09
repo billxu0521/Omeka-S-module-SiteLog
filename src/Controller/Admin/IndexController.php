@@ -18,10 +18,13 @@ class IndexController extends AbstractActionController
         $params = $this->params()->fromQuery();
         $params['site_id'] = $site->id();        
         
-        $response = $this->api()->search('site_log', $params);
+        $response = $this->api()->search('site_log',$params);
         $this->paginator($response->getTotalResults(), $this->params()->fromQuery('page'));
 
         $site_log = $response->getContent();
+        error_log('site id');
+        error_log(json_encode($site_log));
+        
         $view = new ViewModel();
         $view->setVariable('sitelogs', $site_log);
         $view->setVariable('siteid', $params);

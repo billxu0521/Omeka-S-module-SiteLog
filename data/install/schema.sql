@@ -3,6 +3,7 @@ CREATE TABLE site_log (
     user_ip VARCHAR(45) DEFAULT NULL,
     reference LONGTEXT DEFAULT NULL,
     item_id INT DEFAULT NULL,
+    page_slug LONGTEXT DEFAULT NULL,
     site_id INT DEFAULT NULL,
     context LONGTEXT DEFAULT NULL,
     created DATETIME NOT NULL,

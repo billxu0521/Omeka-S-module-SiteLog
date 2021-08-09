@@ -60,8 +60,10 @@ $sortHeadings = [
     <table class="tablesaw batch-edit" data-tablesaw-mode="stack">
         <thead>
             <tr>
-                <th><?= $sortLink($translate('EventType'), 'log') ?></th>
-                <th><?= $sortLink($translate('Url'), 'url') ?></th>
+                <th><?= $sortLink($translate('Reference'), 'reference') ?></th>
+                <th><?= $sortLink($translate('Page'), 'page') ?></th>
+                <th><?= $sortLink($translate('Item'), 'item') ?></th>
+                <th><?= $sortLink($translate('Context'), 'url') ?></th>
                 <th><?= $sortLink($translate('Ip'), 'ip') ?></th>
                 <th><?= $sortLink($translate('Date'), 'date') ?></th>
                 
@@ -72,18 +74,12 @@ $sortHeadings = [
         <tr>
             <td class="webui-popover-parent" style="word-break: break-all;">
                 <span class="log-message">
-                    <?php 
-                    $text = $sitelog->getJsonLd()['o:log'];
-                    $logobj = json_decode($text,true);
-                    ?>
-                    <span class="log-message-truncated truncate"><?php echo $logobj['event_type']; ?></span>
+                    <span class="log-message-truncated truncate"><?php echo $sitelog->getJsonLd()['o:reference']?></span>
                 </span>
             </td>
-            <?php if (isset($logobj['url'])):?>
-            <td><?php echo $logobj['url']; ?></td>
-            <?php else:?>
-            <td></td>
-            <?php endif;?>
+            <td><?php echo $sitelog->getJsonLd()['o:page_slug']?></td>
+            <td><?php echo $sitelog->getJsonLd()['o:item_id']?></td>
+            <td><?php echo $sitelog->getJsonLd()['o:context']?></td>
             <?php $userip = $sitelog->getJsonLd()['o:user_ip']?>
             <td><?php echo substr($userip,0,3) . '.***.***.***' ?></td>
             <td><?= $i18n->dateFormat($sitelog->created(), 'medium', 'medium') ?></td>

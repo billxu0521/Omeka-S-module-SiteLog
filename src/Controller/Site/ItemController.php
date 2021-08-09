@@ -16,17 +16,16 @@ class ItemController extends OmekaItemController
         $site = $this->currentSite();
         $response = $this->api()->read('items', $this->params('id'));
         $item = $response->getContent();
-        $user_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+
+        //log
         $logmessege = '["messege":"resource request"]';
-        error_log('Item:'.$item->id());
-        $logRequest = [
-            'o:user_ip' => $user_ip,
-            'o:item_id' => $item->id(),
-            'o:site_id' => $site->id(),
-            'o:reference' => 'SiteLog',
-            'o:context' => $logmessege,
-        ];
-        $this->api()->create('site_log', $logRequest);
+        $siteLogger = $this->viewHelpers()->get('siteLogger');
+        $site_id = $site->id();
+        $item_id = $item->id();
+        $reference = 'SiteLog';
+        $page_slug = $item->id();
+        $siteLogger = $siteLogger($site_id,$item_id,$reference,$page_slug,$logmessege);
+
         $view = new ViewModel;
         $view->setVariable('site', $site);
         $view->setVariable('item', $item);

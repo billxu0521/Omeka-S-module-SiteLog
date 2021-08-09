@@ -22,7 +22,16 @@ return  [
             'SiteLog\Controller\Site\SiteLog' => Controller\Site\SiteLogController::class,
             'SiteLog\Controller\Admin\Index' => Controller\Admin\IndexController::class,
             'Omeka\Controller\Site\Item' => Controller\Site\ItemController::class,
+            'Omeka\Controller\Site\Page' => Controller\Site\PageController::class,
             //'Omeka\Controller\Site\ItemSet' => Controller\Site\ItemSetController::class,
+        ],
+    ],
+    'view_helpers' => [
+        'invokables' => [
+        ],
+        'factories' => [
+            'siteLogger' => Service\ViewHelper\SiteLoggerFactory::class,
+            'siteLogCounter' => Service\ViewHelper\SiteLogCountFactory::class,
         ],
     ],
     'form_elements' => [
