@@ -1,0 +1,76 @@
+
+<?php
+/*
+ * Copyright BibLibre, 2016
+ * Copyright Daniel Berthereau, 2017-2021
+ *
+ * This software is governed by the CeCILL license under French law and abiding
+ * by the rules of distribution of free software.  You can use, modify and/ or
+ * redistribute the software under the terms of the CeCILL license as circulated
+ * by CEA, CNRS and INRIA at the following URL "http://www.cecill.info".
+ *
+ * As a counterpart to the access to the source code and rights to copy, modify
+ * and redistribute granted by the license, users are provided only with a
+ * limited warranty and the software's author, the holder of the economic
+ * rights, and the successive licensors have only limited liability.
+ *
+ * In this respect, the user's attention is drawn to the risks associated with
+ * loading, using, modifying and/or developing or reproducing the software by
+ * the user in light of its specific status of free software, that may mean that
+ * it is complicated to manipulate, and that also therefore means that it is
+ * reserved for developers and experienced professionals having in-depth
+ * computer knowledge. Users are therefore encouraged to load and test the
+ * software's suitability as regards their requirements in conditions enabling
+ * the security of their systems and/or data to be ensured and, more generally,
+ * to use and operate it in the same conditions as regards security.
+ *
+ * The fact that you are presently reading this means that you have had
+ * knowledge of the CeCILL license and that you accept its terms.
+ */
+
+/**
+ * @var \Laminas\View\Renderer\PhpRenderer $this
+ */
+
+$translate = $this->plugin('translate');
+$escape = $this->plugin('escapeHtml');
+$escapeAttr = $this->plugin('escapeHtmlAttr');
+$url = $this->plugin('url');
+$sortLink = $this->plugin('sortLink');
+$siteSlug = $this->params()->fromRoute('site-slug');
+?>
+<?= $this->pageTitle('', 1, $translate('SiteLog')) ?>
+
+<div id="page-actions">
+<a class="button" href="<?= $url('admin/site/slug/site-log/list',['site-slug' => $siteSlug]) ?>"><?= $translate('List') ?></a>
+<a class="button" href="<?= $url('admin/site/slug/site-log/itemrank',['site-slug' => $siteSlug]) ?>"><?= $translate('ItemRank') ?></a>
+<a class="button" href="<?= $url('admin/site/slug/site-log/pagerank',['site-slug' => $siteSlug]) ?>"><?= $translate('PageRank') ?></a>
+</div>
+
+<table class="tablesaw batch-edit" data-tablesaw-mode="stack">
+        <thead>
+            <tr>
+                <th><?= $sortLink($translate('Item'), 'item') ?></th>
+                <th><?= $sortLink($translate('Title'), 'title') ?></th>
+                <th><?= $sortLink($translate('Type'), 'type') ?></th>
+                <th><?= $sortLink($translate('Views'), 'views') ?></th>
+                
+                
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($itemViewRanks as $itemView): ?>
+        <tr>
+            <td class="webui-popover-parent" style="word-break: break-all;">
+                <span class="log-message">
+                    <span class="log-message-truncated truncate"><a href="<?php echo $itemView['url']?>"><?php echo $itemView['resources_id']?></a></span>
+                </span>
+            </td>
+            <td><?php echo $itemView['title']?></td>
+            <td><?php echo $itemView['resources_type']?></td>
+            <td><?php echo $itemView['views']?></td>
+            
+        </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
