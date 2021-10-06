@@ -5,14 +5,14 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\Form\Form;
 
-
-class IndexController extends AbstractActionController
+class RankController extends AbstractActionController
 {
     
-    public function indexAction()
+    public function indexItemAction()
     {
         $site = $this->currentSite();
         $site_id = $site->id();
+        $view = new ViewModel();
         $siteLogCounter = $this->viewHelpers()->get('siteLogCounter');
         $itemViewRanks = $siteLogCounter->getItemViewRank($site_id);
         foreach ($itemViewRanks as $key => $itemViewRank){
@@ -21,6 +21,18 @@ class IndexController extends AbstractActionController
             $itemViewRanks[$key]['title'] = $item->getJsonLd()['o:title'];
         }
 
+        $view->setVariable('itemViewRanks', $itemViewRanks);
+
+        return $view;
+       
+    }
+
+    public function indexPageAction()
+    {
+        $site = $this->currentSite();
+        $site_id = $site->id();
+        $view = new ViewModel();
+        $siteLogCounter = $this->viewHelpers()->get('siteLogCounter');
         $pageViewRanks = $siteLogCounter->getPageViewRank($site_id);
         foreach ($pageViewRanks as $key => $pageViewRank){
             $page = $this->api()->read('site_pages', $pageViewRank['resources_id'])->getContent();
@@ -28,15 +40,9 @@ class IndexController extends AbstractActionController
             $pageViewRanks[$key]['title'] = $page->getJsonLd()['o:title'];
         }
 
-        $view = new ViewModel();
-        $view->setVariable('itemViewRanks', $itemViewRanks);
-        $view->setVariable('itemPageRanks', $pageViewRanks);
-        
-        return $view;
-    }
+        $view->setVariable('itemViewRanks', $pageViewRanks);
 
-    public function browserAction()
-    {
+        return $view;
        
     }
 }

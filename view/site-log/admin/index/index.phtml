@@ -1,112 +1,100 @@
+
 <?php
-/**
- * @var \Laminas\View\Renderer\PhpRenderer $this
- * @var \Log\Api\Representation\LogRepresentation[] $logs
- * @var \Log\Api\Representation\LogRepresentation[] $resources
- * @var \Omeka\Form\ConfirmForm $formDeleteSelected
- * @var \Omeka\Form\ConfirmForm $formDeleteAll
- * @var \Log\Form\QuickSearchForm $formSearch
+/*
+ * Copyright BibLibre, 2016
+ * Copyright Daniel Berthereau, 2017-2021
+ *
+ * This software is governed by the CeCILL license under French law and abiding
+ * by the rules of distribution of free software.  You can use, modify and/ or
+ * redistribute the software under the terms of the CeCILL license as circulated
+ * by CEA, CNRS and INRIA at the following URL "http://www.cecill.info".
+ *
+ * As a counterpart to the access to the source code and rights to copy, modify
+ * and redistribute granted by the license, users are provided only with a
+ * limited warranty and the software's author, the holder of the economic
+ * rights, and the successive licensors have only limited liability.
+ *
+ * In this respect, the user's attention is drawn to the risks associated with
+ * loading, using, modifying and/or developing or reproducing the software by
+ * the user in light of its specific status of free software, that may mean that
+ * it is complicated to manipulate, and that also therefore means that it is
+ * reserved for developers and experienced professionals having in-depth
+ * computer knowledge. Users are therefore encouraged to load and test the
+ * software's suitability as regards their requirements in conditions enabling
+ * the security of their systems and/or data to be ensured and, more generally,
+ * to use and operate it in the same conditions as regards security.
+ *
+ * The fact that you are presently reading this means that you have had
+ * knowledge of the CeCILL license and that you accept its terms.
  */
 
-$plugins = $this->getHelperPluginManager();
-$translate = $plugins->get('translate');
-$escape = $plugins->get('escapeHtml');
-$escapeAttr = $plugins->get('escapeHtmlAttr');
-$hyperlink = $plugins->get('hyperlink');
-$url = $plugins->get('url');
-$sortLink = $plugins->get('sortLink');
-$assetUrl = $plugins->get('assetUrl');
-$i18n = $plugins->get('i18n');
+/**
+ * @var \Laminas\View\Renderer\PhpRenderer $this
+ */
 
-$this->htmlElement('body')->appendAttribute('class', 'sitelog browse');
-
-$this->headLink()
-    ->appendStylesheet($assetUrl('css/log.css', 'SiteLog'));
-
-$sortHeadings = [
-    [
-        'label' => $translate('Date'),
-        'value' => 'created',
-    ],
-    [
-        'label' => $translate('id'),
-        'value' => 'id',
-    ],
-];
-
+$translate = $this->plugin('translate');
+$escape = $this->plugin('escapeHtml');
+$escapeAttr = $this->plugin('escapeHtmlAttr');
+$partial = $this->plugin('partial');
+$url = $this->plugin('url');
+$sortLink = $this->plugin('sortLink');
+$siteSlug = $this->params()->fromRoute('site-slug');
 ?>
+<?= $this->pageTitle($translate('Site Log')) ?>
 
-<?= $this->pageTitle('', 1, $translate('SiteLog')) ?>
-<?= $this->logSearchFilters() ?>
-<div class="browse-controls">
-    <?= $this->pagination() ?>
-    <?= $this->sortSelector($sortHeadings) ?>
-</div>
+<h2><?= $translate('Site Log List') ?></h2>
+<span><?= $translate('See:')?></span><a href="<?= $url('admin/site/slug/site-log/list',['site-slug' => $siteSlug]) ?>"><?= $translate('Site Log List') ?></a>
 
-<div id="page-actions">
-</div>
-
-<?php $this->trigger('view.browse.before'); ?>
-<?php if (count($sitelogs)): ?>
-<form method='post' id="batch-form" class="disable-unsaved-warning">
-    <div class="batch-inputs">
-        
-        <div class="batch-actions">
-            <input type="hidden" name="query" class="batch-query" value="<?= $escapeAttr(json_encode($this->params()->fromQuery())) ?>">
-            
-        </div>
-    </div>
-
-    <table class="tablesaw batch-edit" data-tablesaw-mode="stack">
-        <thead>
-            <tr>
-                <th><?= $sortLink($translate('Reference'), 'reference') ?></th>
-                <th><?= $sortLink($translate('Page'), 'page') ?></th>
-                <th><?= $sortLink($translate('Item'), 'item') ?></th>
-                <th><?= $sortLink($translate('Context'), 'url') ?></th>
-                <th><?= $sortLink($translate('Ip'), 'ip') ?></th>
-                <th><?= $sortLink($translate('Date'), 'date') ?></th>
-                
-            </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($sitelogs as $sitelog): ?>
+<h2><?= $translate('ItemView Top 20') ?></h2>
+<span><?= $translate('See:')?></span><a href="<?= $url('admin/site/slug/site-log/itemrank',['site-slug' => $siteSlug]) ?>"><?= $translate('Item Top 20 Page') ?></a>
+<table class="tablesaw" data-tablesaw-mode="stack">
+    <thead>
         <tr>
-            <td class="webui-popover-parent" style="word-break: break-all;">
-                <span class="log-message">
-                    <span class="log-message-truncated truncate"><?php echo $sitelog->getJsonLd()['o:reference']?></span>
-                </span>
-            </td>
-            <td><?php echo $sitelog->getJsonLd()['o:page_slug']?></td>
-            <td><?php echo $sitelog->getJsonLd()['o:item_id']?></td>
-            <td><?php echo $sitelog->getJsonLd()['o:context']?></td>
-            <?php $userip = $sitelog->getJsonLd()['o:user_ip']?>
-            <td><?php echo substr($userip,0,3) . '.***.***.***' ?></td>
-            <td><?= $i18n->dateFormat($sitelog->created(), 'medium', 'medium') ?></td>
+            <th><?= $translate('Item') ?></th>
+            <th><?= $translate('Title')?></th>
+            <th><?= $translate('Type')?></th>
+            <th><?= $translate('Views') ?></th>
         </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
-</form>
+    </thead>
+    <tbody>
+    <?php foreach ($itemViewRanks as $itemView): ?>
+    <tr>
+        <td class="webui-popover-parent" style="word-break: break-all;">
+            <span class="log-message">
+                <span class="log-message-truncated truncate"><a href="<?php echo $itemView['url']?>"><?php echo $itemView['resources_id']?></a></span>
+            </span>
+        </td>
+        <td><?php echo $itemView['title']?></td>
+        <td><?php echo $itemView['resources_type']?></td>
+        <td><?php echo $itemView['views']?></td>
+        
+    </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
 
-<?php $this->trigger('view.browse.after'); ?>
-<div class="browse-controls">
-    <?= $this->pagination() ?>
-</div>
-
-<div id="sidebar" class="sidebar">
-    <?= $hyperlink('', '#', [
-        'class' => 'sidebar-close o-icon-close',
-        'title' => $translate('Close'),
-    ]) ?>
-    <div class="sidebar-content"></div>
-</div>
-
-<?php else: ?>
-
-<div class="no-resources">
-    <p><?= $translate('Omeka could not find any logs, or they are saved in another place.') ?></p>
-</div>
-
-<?php endif; ?>
-
+<h2><?= $translate('PageView Top 20') ?></h2>
+<span><?= $translate('See:')?></span><a href="<?= $url('admin/site/slug/site-log/pagerank',['site-slug' => $siteSlug]) ?>"><?= $translate('SitePage Top 20 Page') ?></a>
+<table class="tablesaw" data-tablesaw-mode="stack">
+    <thead>
+        <tr>
+            <th><?= $translate('Title') ?></th>
+            <th><?= $translate('Type') ?></th>
+            <th><?= $translate('Views') ?></th>          
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($itemPageRanks as $PageView): ?>
+    <tr>
+        <td class="webui-popover-parent" style="word-break: break-all;">
+            <span class="log-message">
+                <span class="log-message-truncated truncate"><a href="<?php echo $PageView['url']?>"><?php echo $PageView['title']?></a></span>
+            </span>
+        </td>
+        <td><?php echo $PageView['resources_type']?></td>
+        <td><?php echo $PageView['views']?></td>
+        
+    </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

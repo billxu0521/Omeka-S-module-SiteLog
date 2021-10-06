@@ -29,7 +29,8 @@ class SiteLogRepresentation extends AbstractEntityRepresentation
             'o:id' => $this->id(),
             'o:user_ip' => $this->userip(),
             'o:reference' => $this->reference(),
-            'o:item_id' => $this->item(),
+            'o:resources_id' => $this->resourcesid(),
+            'o:resources_type' => $this->resourcestype(),
             'o:site_id' => $this->site(),
             'o:page_slug' => $this->page(),
             'o:context' => $this->context(),
@@ -68,9 +69,14 @@ class SiteLogRepresentation extends AbstractEntityRepresentation
         return  $this->resource->getPageslug();
     }
     
-    public function item()
+    public function resourcesid()
     {
-        return $this->resource->getItemid();
+        return $this->resource->getResourcesid();
+    }
+
+    public function resourcestype()
+    {
+        return $this->resource->getResourcestype();
     }
   
     /**

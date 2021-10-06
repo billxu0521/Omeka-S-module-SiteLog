@@ -32,7 +32,13 @@ class SiteLog extends AbstractEntity
      * @Column(type="integer")
      * @GeneratedValue
      */
-    protected $item_id;
+    protected $resources_id;
+
+     /**
+     * @var string
+     * @Column(type="string", length=45)
+     */
+    protected $resources_type;
 
     /**
      * @var int
@@ -84,14 +90,24 @@ class SiteLog extends AbstractEntity
         return $this->id;
     }
     
-    public function getItemid()
+    public function getResourcesid()
     {
-        return $this->item_id;
+        return $this->resources_id;
     }
 
-    public function setItemid($item_id)
+    public function setResourcesid($resources_id)
     {
-        $this->item_id = $item_id;
+        $this->resources_id = $resources_id;
+    }
+
+    public function getResourcestype()
+    {
+        return $this->resources_type;
+    }
+
+    public function setResourcestype($resources_type)
+    {
+        $this->resources_type = $resources_type;
     }
 
     public function getSiteid()

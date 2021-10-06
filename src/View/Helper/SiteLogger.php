@@ -34,14 +34,15 @@ class SiteLogger extends AbstractHelper
      * Add new log in DB
      * 
      * @param int  $site_id
-     * @param int $item_id
+     * @param int $resources_id
      * @param string $reference 
      * @param string $page_slug
      * @param string $logmessege 
      */
     public function __invoke(
         $site_id = null,
-        $item_id = null,
+        $resources_id = null,
+        $resources_type = '',
         $reference = '',
         $page_slug = '',
         $logmessege = ''
@@ -58,7 +59,8 @@ class SiteLogger extends AbstractHelper
         $logRequest = [
             'o:user_ip' => $user_ip,
             'o:site_id' => $site_id,
-            'o:item_id' => $item_id,
+            'o:resources_id' => $resources_id,
+            'o:resources_type' => $resources_type,
             'o:page_slug' => $page_slug,
             'o:reference' => $reference,
             'o:context' => $logmessege,

@@ -23,7 +23,9 @@ return  [
             'SiteLog\Controller\Admin\Index' => Controller\Admin\IndexController::class,
             'Omeka\Controller\Site\Item' => Controller\Site\ItemController::class,
             'Omeka\Controller\Site\Page' => Controller\Site\PageController::class,
-            //'Omeka\Controller\Site\ItemSet' => Controller\Site\ItemSetController::class,
+            //ㄈ'Omeka\Controller\Site\ItemSet' => Controller\Site\ItemSetController::class,
+            'SiteLog\Controller\Admin\SiteLog' => Controller\Admin\SiteLogController::class,
+            'SiteLog\Controller\Admin\Rank' => Controller\Admin\RankController::class,
         ],
     ],
     'view_helpers' => [
@@ -112,6 +114,48 @@ return  [
                                                     'route' => '/:action',
                                                     'constraints' => [
                                                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                                    ],
+                                                ],
+                                            ],
+                                            'itemrank' => [
+                                                'type' => 'Segment',
+                                                'options' => [
+                                                    'route' => '/rank/:action',
+                                                    'constraints' => [
+                                                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                                    ],
+                                                    'defaults' => [
+                                                        '__NAMESPACE__' => 'SiteLog\Controller\Admin',
+                                                        'controller' => Controller\Admin\RankController::class,
+                                                        'action' => 'indexItem',
+                                                    ],
+                                                ],
+                                            ],
+                                            'pagerank' => [
+                                                'type' => 'Segment',
+                                                'options' => [
+                                                    'route' => '/rank/:action',
+                                                    'constraints' => [
+                                                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                                    ],
+                                                    'defaults' => [
+                                                        '__NAMESPACE__' => 'SiteLog\Controller\Admin',
+                                                        'controller' => Controller\Admin\RankController::class,
+                                                        'action' => 'indexPage',
+                                                    ],
+                                                ],
+                                            ],
+                                            'list' => [
+                                                'type' => 'Segment',
+                                                'options' => [
+                                                    'route' => '/list/:action',
+                                                    'constraints' => [
+                                                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                                    ],
+                                                    'defaults' => [
+                                                        '__NAMESPACE__' => 'SiteLog\Controller\Admin',
+                                                        'controller' => Controller\Admin\SiteLogController::class,
+                                                        'action' => 'index',
                                                     ],
                                                 ],
                                             ],

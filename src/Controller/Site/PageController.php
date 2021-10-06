@@ -36,10 +36,11 @@ class PageController extends OmekaPageController
         $logmessege = '["messege":"page request"]';
         $siteLogger = $this->viewHelpers()->get('siteLogger');
         $site_id = $site->id();
-        $item_id = null;
+        $resources_id = $page->id();
+        $resources_type = 'page';
         $reference = 'SiteLog';
         $page_slug = $page->slug();
-        $siteLogger = $siteLogger($site_id,$item_id,$reference,$page_slug,$logmessege);
+        $siteLogger = $siteLogger($site_id,$resources_id,$resources_type,$reference,$page_slug,$logmessege);
 
         $view = new ViewModel;
 

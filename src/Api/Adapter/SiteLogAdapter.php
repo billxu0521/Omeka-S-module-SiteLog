@@ -14,7 +14,8 @@ class SiteLogAdapter extends AbstractEntityAdapter
     protected $sortFields = [
         'id' => 'id',
         'reference' => 'reference',
-        'item_id' => 'item_id',
+        'resources_id' => 'resources_id',
+        'resources_type' => 'resources_type',
         'page_slug' => 'page_slug',
         'site_id' => 'site_id',
         'user_ip' => 'user_ip',
@@ -40,7 +41,8 @@ class SiteLogAdapter extends AbstractEntityAdapter
     ) {
         $data = $request->getContent();
         $entity->setSiteid($request->getValue('o:site_id', ''));
-        $entity->setItemid($request->getValue('o:item_id', ''));
+        $entity->setResourcesid($request->getValue('o:resources_id', ''));
+        $entity->setResourcestype($request->getValue('o:resources_type', ''));
         $entity->setUserip($request->getValue('o:user_ip', ''));
         $entity->setPageslug($request->getValue('o:page_slug', ''));
         $entity->setReference($request->getValue('o:reference', ''));
@@ -61,10 +63,17 @@ class SiteLogAdapter extends AbstractEntityAdapter
             ));
         }
 
-        if (isset($query['item_id']) && strlen((string) $query['item_id'])) {
+        if (isset($query['resources_id']) && strlen((string) $query['resources_id'])) {
             $qb->andWhere($expr->eq(
-                'omeka_root.item_id',
-                $this->createNamedParameter($qb, $query['item_id'])
+                'omeka_root.resources_id',
+                $this->createNamedParameter($qb, $query['resources_id'])
+            ));
+        }
+
+        if (isset($query['resources_type']) && strlen((string) $query['resources_type'])) {
+            $qb->andWhere($expr->eq(
+                'omeka_root.resources_type',
+                $this->createNamedParameter($qb, $query['resources_type'])
             ));
         }
 
